@@ -1,15 +1,19 @@
 const PRODUCTS = [
-    { id: 1, name: "Running Shoes", price: 2499, img: "shoes.jpg", desc: "Comfortable and stylish running shoes for daily use and sports." },
-    { id: 2, name: "Smart Watch", price: 3999, img: "watch.jpg", desc: "Track your steps, heart rate and notifications on your wrist." },
-    { id: 3, name: "Wireless Headphones", price: 1899, img: "headphoness.jpg", desc: "Clear sound and long battery life without the wires." },
-    { id: 4, name: "Backpack", price: 1299, img: "bag.jpg", desc: "Spacious, durable backpack for school, work and travel." },
-    { id: 5, name: "Smart Phone", price: 18999, img: "phones.jpg", desc: "Fast, reliable smartphone with a bright display." }];
+    { id: 1, name: "Running Shoes", price: 2499, img: "Images/shoes.jpg", desc: "Comfortable and stylish running shoes for daily use and sports." },
+    { id: 2, name: "Smart Watch", price: 3999, img: "Images/watch.jpg", desc: "Track your steps, heart rate and notifications on your wrist." },
+    { id: 3, name: "Wireless Headphones", price: 1899, img: "Images/headphoness.jpg", desc: "Clear sound and long battery life without the wires." },
+    { id: 4, name: "Backpack", price: 1299, img: "Images/bag.jpg", desc: "Spacious, durable backpack for school, work and travel." },
+    { id: 5, name: "Smart Phone", price: 18999, img: "Images/phones.jpg", desc: "Fast, reliable smartphone with a bright display." }];
+
 const $ = s => document.querySelector(s);
 const inr = n => "₹" + n.toLocaleString("en-IN");
 const getCart = () => { try { return JSON.parse(localStorage.getItem("cart")) || [] } catch { return [] } };
 const saveCart = c => { localStorage.setItem("cart", JSON.stringify(c)); updateBadge() };
 function addToCart(id, qty = 1) { qty = Math.max(1, parseInt(qty) || 1); const c = getCart(), i = c.find(x => x.id === id); i ? i.qty += qty : c.push({ id, qty }); saveCart(c); alert("Added to cart!") }
+
 function updateBadge() { const b = $("#cartCount"); if (b) { const n = getCart().reduce((s, x) => s + x.qty, 0); b.textContent = n; b.hidden = !n } }
+
+
 // shared header + footer
 const page = location.pathname.split("/").pop() || "trendcart.html";
 const LINKS = [["trendcart.html", "Home"], ["shop.html", "Shop"], ["about.html", "About"], ["contact.html", "Contact"], ["login.html", "Login"], ["signup.html", "Sign Up"], ["cart.html", "Cart"]];
@@ -25,6 +29,8 @@ $("#site-footer").outerHTML = `<footer><div class="footer-container">
 const mb = $(".menu-btn"), nl = $(".nav-links");
 mb.onclick = () => { const o = nl.classList.toggle("open"); mb.setAttribute("aria-expanded", o) };
 updateBadge();
+
+
 // products grid (home + shop) with search
 const grid = $("#productGrid");
 if (grid) {
@@ -35,6 +41,8 @@ if (grid) {
     };
     draw(""); const s = $("#searchInput"); if (s) s.oninput = () => draw(s.value.trim().toLowerCase())
 }
+
+
 // product page
 const pv = $("#productView");
 if (pv) {
@@ -46,6 +54,8 @@ if (pv) {
     $("#add").onclick = () => addToCart(p.id, $("#qty").value);
     $("#buy").onclick = () => { const c = getCart(), q = Math.max(1, parseInt($("#qty").value) || 1), i = c.find(x => x.id === p.id); i ? i.qty += q : c.push({ id: p.id, qty: q }); saveCart(c); location.href = "cart.html" }
 }
+
+
 // cart page
 const ci = $("#cartItems");
 function drawCart() {
@@ -59,6 +69,8 @@ function drawCart() {
 function setQty(id, v) { const c = getCart(), i = c.find(x => x.id === id); i.qty = Math.max(1, parseInt(v) || 1); saveCart(c); drawCart() }
 function removeItem(id) { saveCart(getCart().filter(x => x.id !== id)); drawCart() }
 if (ci) { drawCart(); $("#checkout").onclick = () => { if (!getCart().length) return alert("Your cart is empty."); alert("Thank you! Your order is placed (demo)."); saveCart([]); drawCart() } }
+
+
 // demo forms
 document.querySelectorAll("form[data-msg]").forEach(f => f.onsubmit = e => {
     e.preventDefault();
@@ -67,6 +79,8 @@ document.querySelectorAll("form[data-msg]").forEach(f => f.onsubmit = e => {
     if (pw.length === 2 && pw[0].value.length < 6) return alert("Password must be at least 6 characters.");
     alert(f.dataset.msg); f.reset()
 });
+
+
 // back to top
 const tb = document.createElement("button"); tb.id = "topBtn"; tb.textContent = "↑"; tb.setAttribute("aria-label", "Back to top");
 tb.onclick = () => scrollTo({ top: 0, behavior: "smooth" }); document.body.append(tb);
